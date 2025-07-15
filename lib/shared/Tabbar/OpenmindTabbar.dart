@@ -62,8 +62,8 @@ class _OpenmindTabbarState extends State<OpenmindTabbar>
   Widget build(BuildContext context) {
     final tabItems = [
       (icon: AppIcon.home, label: "홈"),
-      (icon: AppIcon.write, label: "검색"),
-      (icon: AppIcon.message, label: "채팅"),
+      (icon: AppIcon.write, label: "일기"),
+      (icon: AppIcon.search, label: "둘러보기"),
       (icon: AppIcon.profile, label: "프로필"),
     ];
 
@@ -94,17 +94,17 @@ class _OpenmindTabbarState extends State<OpenmindTabbar>
                   description: tabItems[0].label,
                 ),
                 TabItem(
-                  icon: tabItems[1].icon,
-                  isSelected: widget.currentIndex == 1,
-                  onTap: () => widget.onTap(1),
-                  description: tabItems[1].label,
-                ),
-                Expanded(child: SizedBox()),
-                TabItem(
                   icon: tabItems[2].icon,
                   isSelected: widget.currentIndex == 2,
                   onTap: () => widget.onTap(2),
                   description: tabItems[2].label,
+                ),
+                Expanded(child: SizedBox()),
+                TabItem(
+                  icon: tabItems[1].icon,
+                  isSelected: widget.currentIndex == 1,
+                  onTap: () => widget.onTap(1),
+                  description: tabItems[1].label,
                 ),
                 TabItem(
                   icon: tabItems[3].icon,
@@ -133,7 +133,7 @@ class _OpenmindTabbarState extends State<OpenmindTabbar>
                         shape: BoxShape.circle,
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.black.withOpacity(0.15),
+                            color: AppColor.main.withOpacity(0.3),
                             blurRadius: 12,
                             offset: Offset(0, 4),
                           ),
@@ -153,13 +153,13 @@ class _OpenmindTabbarState extends State<OpenmindTabbar>
                           gradient: LinearGradient(
                             begin: Alignment.topLeft,
                             end: Alignment.bottomRight,
-                            colors: [Colors.grey[800]!, Colors.black],
+                            colors: [Colors.grey[100]!, AppColor.main],
                           ),
                         ),
                         child: Center(
                           child: Text(
-                            "AI상담",
-                            style: AppFont.medium(12, color: Colors.white),
+                            "AI 상담",
+                            style: AppFont.bold(13, color: Colors.black),
                           ),
                         ),
                       ),

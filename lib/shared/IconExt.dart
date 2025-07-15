@@ -6,7 +6,8 @@ enum AppIcon {
   write('write'),
   message('message'),
   profile('profile'),
-  bell('bell');
+  bell('bell'),
+  search('search');
 
   final String baseName;
 

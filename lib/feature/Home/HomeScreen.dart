@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:openmind_app/feature/AI/AIScreen.dart';
+import 'package:openmind_app/feature/Arround/ArroundScreen.dart';
 import 'package:openmind_app/feature/Component/SearchTextField.dart';
-import 'package:openmind_app/feature/Home/Component/expanded_section_card.dart';
+import 'package:openmind_app/feature/Home/Component/ExpandedSectionCard.dart';
 import 'package:openmind_app/feature/Message/MessageScreen.dart';
 import 'package:openmind_app/feature/Write/WriteScreen.dart';
 import 'package:openmind_app/shared/ColorExt.dart';
 import 'package:openmind_app/shared/FontExt.dart';
-import 'package:openmind_app/shared/IconExt.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -38,6 +38,10 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final cardRadius = 14.0;
+    final buttonHeight = 44.0;
+    final mainColor = AppColor.main;
+
     return Scaffold(
       backgroundColor: AppColor.background,
       body: CustomScrollView(
@@ -46,33 +50,37 @@ class _HomeScreenState extends State<HomeScreen> {
             backgroundColor: AppColor.background,
             centerTitle: false,
             title: Text("OPENMIND", style: AppFont.bold(20)),
+            elevation: 0,
             actions: [
               IconButton(
                 onPressed: () {
-                  print("알림");
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => MessageScreen()),
+                  );
                 },
-                icon: AppIcon.bell.toIcon(),
+                icon: Icon(Icons.send, color: Colors.black87),
+                splashRadius: 20,
               ),
             ],
           ),
 
           CupertinoSliverRefreshControl(
             onRefresh: () async {
-              print("스크롤");
+              // 리프레시 기능 추가 가능
+              print("스크롤 리프레시");
             },
           ),
 
           SliverToBoxAdapter(
             child: Padding(
-              padding: EdgeInsets.all(20),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
               child: SizedBox(
                 height: 40,
                 child: SearchTextField(
                   controller: _controller,
                   onChanged: (value) {
-                    setState(() {
-                      _searchText = value;
-                    });
+                    setState(() => _searchText = value);
                   },
                 ),
               ),
@@ -81,115 +89,196 @@ class _HomeScreenState extends State<HomeScreen> {
 
           SliverList(
             delegate: SliverChildListDelegate([
+              // AI 상담 카드
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
-                child: ExpandedSectionCard(
-                  headerText: "새로운 마음을 찾아요",
-                  title: "AI랑 상담하러 가기",
-                  headerIcon: Icons.psychology_outlined,
-                  headerIconColor: Colors.black,
-                  cardColor: Colors.white,
-                  titleTextColor: Colors.black,
-                  headerTextColor: Colors.black54,
-                  buttonText: "AI 상담 시작하기",
-                  buttonColor: Colors.black,
-                  buttonTextColor: Colors.white,
-                  onButtonPressed: () {
-                    print("AI 상담 시작하기");
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => AIScreen()),
-                    );
-                  },
-                  additionalActions: [
-                    ActionRow(
-                      mainText: "AI와 대화 기록 보기",
-                      actionText: "기록 확인",
-                      onTap: () {
-                        print("AI와 대화 기록 보기 (AIScreen으로 이동)");
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => AIScreen()),
-                        );
-                      },
-                      textColor: Colors.black,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 10,
+                ),
+                child: Card(
+                  elevation: 2,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(cardRadius),
+                  ),
+                  shadowColor: Colors.black12,
+                  color: Colors.white,
+                  child: Padding(
+                    padding: const EdgeInsets.all(20),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Container(
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: mainColor.withOpacity(0.1),
+                              ),
+                              padding: const EdgeInsets.all(8),
+                              child: Icon(
+                                Icons.psychology_outlined,
+                                size: 32,
+                                color: mainColor,
+                              ),
+                            ),
+                            const SizedBox(width: 12),
+                            Text(
+                              "AI에게 다 털어놔요",
+                              style: AppFont.bold(
+                                16,
+                              ).copyWith(color: mainColor),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 10),
+                        Text(
+                          "AI랑 상담하러 가기",
+                          style: AppFont.bold(
+                            22,
+                          ).copyWith(color: Colors.black87, height: 1.1),
+                        ),
+                        const SizedBox(height: 6),
+                        Text(
+                          "마음의 무게를 가볍게, AI가 함께 합니다.",
+                          style: AppFont.regular(
+                            14,
+                          ).copyWith(color: Colors.black54),
+                        ),
+                        const SizedBox(height: 20),
+                        SizedBox(
+                          width: double.infinity,
+                          height: buttonHeight,
+                          child: ElevatedButton(
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (_) => AIScreen()),
+                              );
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: mainColor,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              elevation: 3,
+                            ),
+                            child: Text(
+                              "AI 상담 시작하기",
+                              style: AppFont.bold(
+                                16,
+                              ).copyWith(color: Colors.white),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
-                  ],
+                  ),
                 ),
               ),
+
+              // 상담사 매칭 카드
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 10,
+                ),
                 child: ExpandedSectionCard(
                   headerText: "나에게 맞는 상담사를 찾아요",
-                  title: "상담사 매칭 하러 가기",
+                  title: "상담사 매칭 진행 중이에요",
                   headerIcon: Icons.people_alt_outlined,
-                  headerIconColor: Colors.black,
+                  headerIconColor: Colors.black87,
                   cardColor: Colors.white,
-                  titleTextColor: Colors.black,
+                  titleTextColor: Colors.black87,
                   headerTextColor: Colors.black54,
-                  buttonText: "상담사 매칭 시작",
-                  buttonColor: Colors.black,
+                  buttonText: "나의 상담사 보기",
+                  buttonColor: mainColor,
                   buttonTextColor: Colors.white,
                   onButtonPressed: () {
-                    print("상담사 매칭 시작");
                     Navigator.push(
                       context,
-                      MaterialPageRoute(
-                        builder: (context) => MessageScreen(),
-                      ),
+                      MaterialPageRoute(builder: (_) => ArroundScreen()),
                     );
                   },
                   additionalActions: [
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 6.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            "87%의 사용자들이 연결되었어요",
+                            style: AppFont.medium(
+                              13,
+                            ).copyWith(color: Colors.black54),
+                          ),
+                          Text(
+                            "87%",
+                            style: AppFont.bold(
+                              13,
+                            ).copyWith(color: Colors.black87),
+                          ),
+                        ],
+                      ),
+                    ),
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(6),
+                      child: LinearProgressIndicator(
+                        value: 0.87,
+                        backgroundColor: Colors.grey[300],
+                        valueColor: AlwaysStoppedAnimation<Color>(mainColor),
+                        minHeight: 8,
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+
                     ActionRow(
                       mainText: "상담사 프로필 둘러보기",
                       actionText: "프로필 확인",
                       onTap: () {
-                        print("상담사 프로필 둘러보기 (MessageScreen으로 이동)");
                         Navigator.push(
                           context,
-                          MaterialPageRoute(
-                            builder: (context) => MessageScreen(),
-                          ),
+                          MaterialPageRoute(builder: (_) => ArroundScreen()),
                         );
                       },
-                      textColor: Colors.black,
+                      textColor: Colors.black87,
                     ),
-                    Divider(color: Colors.black12, height: 20),
+                    const Divider(color: Colors.black12, height: 20),
                     ActionRow(
-                      mainText: "상담사 확인",
-                      actionText: "상담사 확인 하러 가기",
+                      mainText: "상담사 예약 확인",
+                      actionText: "예약 내역 보기",
                       onTap: () {
-                        print("상담 예약 내역 확인 (MessageScreen으로 이동)");
                         Navigator.push(
                           context,
-                          MaterialPageRoute(
-                            builder: (context) => MessageScreen(),
-                          ),
+                          MaterialPageRoute(builder: (_) => MessageScreen()),
                         );
                       },
-                      textColor: Colors.black,
+                      textColor: Colors.black87,
                     ),
                   ],
                 ),
               ),
+
+              // 일기 작성 카드
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 10,
+                ),
                 child: ExpandedSectionCard(
                   headerText: "오늘 하루를 기록해요",
                   title: "일기 쓰러 가기",
                   headerIcon: Icons.book_outlined,
-                  headerIconColor: Colors.black,
+                  headerIconColor: Colors.black87,
                   cardColor: Colors.white,
-                  titleTextColor: Colors.black,
+                  titleTextColor: Colors.black87,
                   headerTextColor: Colors.black54,
                   buttonText: "새 일기 작성하기",
-                  buttonColor: Colors.black,
+                  buttonColor: mainColor,
                   buttonTextColor: Colors.white,
                   onButtonPressed: () {
-                    print("새 일기 작성하기");
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => WriteScreen()),
+                      MaterialPageRoute(builder: (_) => WriteScreen()),
                     );
                   },
                   additionalActions: [
@@ -197,15 +286,12 @@ class _HomeScreenState extends State<HomeScreen> {
                       mainText: "나의 일기 모아보기",
                       actionText: "전체 보기",
                       onTap: () {
-                        print("나의 일기 보러가기 (WriteScreen으로 이동)");
                         Navigator.push(
                           context,
-                          MaterialPageRoute(
-                            builder: (context) => WriteScreen(),
-                          ),
+                          MaterialPageRoute(builder: (_) => WriteScreen()),
                         );
                       },
-                      textColor: Colors.black,
+                      textColor: Colors.black87,
                     ),
                   ],
                 ),

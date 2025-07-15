@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:openmind_app/feature/AI/AIScreen.dart';
+import 'package:openmind_app/feature/Arround/ArroundScreen.dart';
 import 'package:openmind_app/feature/Home/HomeScreen.dart';
 import 'package:openmind_app/feature/Message/MessageScreen.dart';
 import 'package:openmind_app/feature/Profile/ProfileScreen.dart';
@@ -18,9 +19,8 @@ class _TabbarScreenState extends State<TabbarScreen> {
   int _currentIndex = 0;
   final List<Widget> _pages = [
     HomeScreen(),
+    ArroundScreen(),
     WriteScreen(),
-    AIScreen(),
-    MessageScreen(),
     ProfileScreen(),
   ];
 
