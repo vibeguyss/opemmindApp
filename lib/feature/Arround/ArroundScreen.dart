@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:openmind_app/feature/Arround/Component/DoctorListComponent.dart';
 import 'package:openmind_app/shared/ColorExt.dart';
 import 'package:openmind_app/shared/FontExt.dart';
 
@@ -14,6 +15,7 @@ class ArroundScreen extends StatelessWidget {
         centerTitle: false,
         title: Text("상담원 둘러보기", style: AppFont.bold(20)),
       ),
+      body: DoctorListComponent(),
     );
   }
 }

@@ -1,37 +1,125 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:openmind_app/feature/Write/Component/MyWriteListComponent.dart';
+import 'package:openmind_app/feature/Write/Detail/WriteDetailScreen.dart';
 import 'package:openmind_app/feature/Write/Edit/WriteEditScreen.dart';
-import 'package:openmind_app/feature/Write/Model/MyWriteModel.dart';
+import 'package:openmind_app/feature/Write/ViewModel/WriteViewModel.dart';
 import 'package:openmind_app/shared/ColorExt.dart';
 import 'package:openmind_app/shared/FontExt.dart';
-import 'package:openmind_app/shared/IconExt.dart';
+import 'package:provider/provider.dart';
 
-class WriteScreen extends StatelessWidget {
+class WriteScreen extends StatefulWidget {
   const WriteScreen({Key? key}) : super(key: key);
 
   @override
+  State<WriteScreen> createState() => _WriteScreenState();
+}
+
+class _WriteScreenState extends State<WriteScreen> {
+  @override
+  void initState() {
+    super.initState();
+    Future.microtask(() => context.read<WriteViewModel>().fetchMyWrite());
+  }
+
+  Future<void> _onRefresh() async {
+    await context.read<WriteViewModel>().fetchMyWrite();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    // 예시 더미 데이터
-    final List<MyWriteModel> dummyList = [
-      MyWriteModel(dailyId: 1, title: "첫 번째 일기", content: "오늘은 정말 좋은 날이었다."),
-      MyWriteModel(dailyId: 2, title: "두 번째 일기", content: "Flutter 공부를 시작했다."),
-      MyWriteModel(dailyId: 3, title: "세 번째 일기", content: "친구들과 즐거운 시간을 보냈다."),
-    ];
+    final viewModel = context.watch<WriteViewModel>();
+    final items = viewModel.myWritings;
 
     return Scaffold(
       backgroundColor: AppColor.background,
-      appBar: AppBar(
-        backgroundColor: AppColor.background,
-        centerTitle: false,
-        title: Text("내 일기", style: AppFont.bold(20)),
+      body: CustomScrollView(
+        slivers: [
+          SliverAppBar(
+            backgroundColor: AppColor.background,
+            elevation: 0,
+            floating: true,
+            snap: true,
+            pinned: false,
+            centerTitle: false,
+            title: Text("내 일기", style: AppFont.bold(20)),
+          ),
+
+          CupertinoSliverRefreshControl(onRefresh: _onRefresh),
+
+          if (viewModel.isLoading && items.isEmpty)
+            SliverFillRemaining(
+              child: Center(
+                child: CircularProgressIndicator(color: AppColor.main),
+              ),
+            )
+          else if (items.isEmpty)
+            SliverFillRemaining(
+              child: Center(
+                child: Text("작성된 일기가 없습니다.", style: AppFont.medium(16)),
+              ),
+            )
+          else
+            SliverList(
+              delegate: SliverChildBuilderDelegate(
+                    (context, index) {
+                  final item = items[index];
+                  return GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => WriteDetailScreen(writeModel: item),
+                        ),
+                      );
+                    },
+                    child: Container(
+                      margin:
+                      EdgeInsets.symmetric(horizontal: 20, vertical: 6),
+                      padding:
+                      EdgeInsets.symmetric(vertical: 16, horizontal: 20),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(14),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.05),
+                            blurRadius: 8,
+                            offset: Offset(0, 4),
+                          ),
+                        ],
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            item.title,
+                            style: AppFont.bold(16).copyWith(color: AppColor.main),
+                          ),
+                          SizedBox(height: 6),
+                          Text(
+                            item.content,
+                            maxLines: 3,
+                            overflow: TextOverflow.ellipsis,
+                            style: AppFont.regular(14).copyWith(color: Colors.black87),
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                },
+                childCount: items.length,
+              ),
+            ),
+        ],
       ),
-      body: MyWriteListComponent(items: dummyList),  // 여기에 리스트 컴포넌트 넣음
       floatingActionButton: FloatingActionButton(
         backgroundColor: AppColor.main,
         onPressed: () {
           Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => const WriteEditScreen()),
+              context,
+            MaterialPageRoute(
+              builder: (_) => WriteEditScreen()
+            ),
           );
         },
         child: Icon(Icons.edit, color: Colors.white),
