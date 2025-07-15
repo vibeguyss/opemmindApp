@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:openmind_app/feature/Auth/LoginScreen.dart';
-import 'package:openmind_app/feature/Profile/Component/account_setting_item.dart';
+import 'package:openmind_app/feature/Profile/Component/AccountSettingItem.dart';
 import 'package:openmind_app/feature/Profile/ViewModel/ProfileViewModel.dart';
 import 'package:openmind_app/shared/ColorExt.dart';
 import 'package:openmind_app/shared/FontExt.dart';
 import 'package:provider/provider.dart';
+import 'package:shimmer/shimmer.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({Key? key}) : super(key: key);
@@ -31,27 +32,30 @@ class ProfileScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   SizedBox(height: 8),
-                  ListTile(
-                    contentPadding: EdgeInsets.zero,
-                    leading: user?.imageUrl != null && user!.imageUrl.isNotEmpty
-                        ? CircleAvatar(
-                      radius: 28,
-                      backgroundImage: NetworkImage(user.imageUrl),
-                    )
-                        : CircleAvatar(
-                      radius: 28,
-                      backgroundColor: Colors.grey,
-                      child: Icon(Icons.person, color: Colors.white, size: 36),
-                    ),
-                    title: Text(
-                      user?.name ?? '불러오는 중...',
-                      style: AppFont.bold(20),
-                    ),
-                    subtitle: Text(
-                      user?.email ?? '',
-                      style: TextStyle(fontSize: 14, color: Colors.grey),
-                    ),
-                  ),
+                  user == null
+                      ? _buildSkeletonProfile()
+                      : ListTile(
+                          contentPadding: EdgeInsets.zero,
+                          leading: user.imageUrl.isNotEmpty
+                              ? CircleAvatar(
+                                  radius: 28,
+                                  backgroundImage: NetworkImage(user.imageUrl),
+                                )
+                              : CircleAvatar(
+                                  radius: 28,
+                                  backgroundColor: Colors.grey,
+                                  child: Icon(
+                                    Icons.person,
+                                    color: Colors.white,
+                                    size: 36,
+                                  ),
+                                ),
+                          title: Text(user.name, style: AppFont.bold(20)),
+                          subtitle: Text(
+                            user.email,
+                            style: TextStyle(fontSize: 14, color: Colors.grey),
+                          ),
+                        ),
                   SizedBox(height: 10),
 
                   _buildSectionHeader('정보'),
@@ -67,17 +71,26 @@ class ProfileScreen extends StatelessWidget {
 
                   _buildSectionHeader('계정'),
                   SizedBox(height: 4),
-                  AccountSettingItem(title: '로그아웃', onTap: () {
-                    viewModel.logout();
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(builder: (context) => LoginScreen()),
-                    );
-                  }),
+                  AccountSettingItem(
+                    title: '로그아웃',
+                    onTap: () {
+                      viewModel.logout();
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(builder: (context) => LoginScreen()),
+                      );
+                    },
+                  ),
                   AccountSettingItem(
                     title: '회원탈퇴',
                     isDestructive: true,
-                    onTap: () {},
+                    onTap: () {
+                      viewModel.logout();
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(builder: (context) => LoginScreen()),
+                      );
+                    },
                   ),
                   SizedBox(height: 30),
                 ],
@@ -85,6 +98,24 @@ class ProfileScreen extends StatelessWidget {
             );
           },
         ),
+      ),
+    );
+  }
+
+  Widget _buildSkeletonProfile() {
+    return Shimmer.fromColors(
+      baseColor: Colors.grey.shade300,
+      highlightColor: Colors.grey.shade100,
+      child: ListTile(
+        contentPadding: EdgeInsets.zero,
+        leading: CircleAvatar(radius: 28, backgroundColor: Colors.white),
+        title: Container(
+          height: 18,
+          width: 100,
+          color: Colors.white,
+          margin: EdgeInsets.only(bottom: 8),
+        ),
+        subtitle: Container(height: 14, width: 150, color: Colors.white),
       ),
     );
   }

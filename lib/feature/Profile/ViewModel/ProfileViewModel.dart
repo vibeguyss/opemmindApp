@@ -12,16 +12,14 @@ class ProfileViewModel extends ChangeNotifier {
 
   Future<void> fetchMyData(BuildContext context) async {
     try {
-      final response = await apiClient.get(
-        '/user/me',
-        withToken: true,
-      );
+      final response = await apiClient.get('/user/me', withToken: true);
 
       if (response.statusCode == 200) {
-        final jsonMap = jsonDecode(response.body);
+        final decodedBody = utf8.decode(response.bodyBytes);
+        final jsonMap = jsonDecode(decodedBody);
         final userJson = jsonMap['data'];
         userData = UserModel.fromJson(userJson);
-        notifyListeners(); // UI 반영
+        notifyListeners();
       } else {
         print("❌ 사용자 정보 가져오기 실패: ${response.statusCode}");
       }
@@ -29,6 +27,7 @@ class ProfileViewModel extends ChangeNotifier {
       print("❌ 네트워크 오류: $e");
     }
   }
+
 
   Future<void> logout() async {
     final prefs = await SharedPreferences.getInstance();

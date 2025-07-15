@@ -190,7 +190,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   cardColor: Colors.white,
                   titleTextColor: Colors.black87,
                   headerTextColor: Colors.black54,
-                  buttonText: "나의 상담사 보기",
+                  buttonText: "상담사 매칭하러 가기",
                   buttonColor: mainColor,
                   buttonTextColor: Colors.white,
                   onButtonPressed: () {

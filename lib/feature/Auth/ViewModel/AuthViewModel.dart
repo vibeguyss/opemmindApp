@@ -55,6 +55,7 @@ class AuthViewModel extends ChangeNotifier {
 
         final prefs = await SharedPreferences.getInstance();
         await prefs.setString('accessToken', token.accessToken);
+        await prefs.setString('refreshToken', token.refreshToken);
 
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(

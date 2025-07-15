@@ -4,23 +4,8 @@ import 'package:openmind_app/shared/ColorExt.dart';
 import 'package:openmind_app/shared/FontExt.dart';
 import 'package:provider/provider.dart';
 
-class WriteEditScreen extends StatefulWidget {
+class WriteEditScreen extends StatelessWidget {
   const WriteEditScreen({Key? key}) : super(key: key);
-
-  @override
-  State<WriteEditScreen> createState() => _WriteEditScreenState();
-}
-
-class _WriteEditScreenState extends State<WriteEditScreen> {
-  final _titleController = TextEditingController();
-  final _contentController = TextEditingController();
-
-  @override
-  void dispose() {
-    _titleController.dispose();
-    _contentController.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,17 +32,14 @@ class _WriteEditScreenState extends State<WriteEditScreen> {
           )
               : TextButton(
             onPressed: () async {
-              final title = _titleController.text.trim();
-              final content = _contentController.text.trim();
-
-              if (title.isEmpty || content.isEmpty) {
+              if (viewModel.titleController.text.trim().isEmpty ||
+                  viewModel.contentController.text.trim().isEmpty) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(content: Text("제목과 내용을 모두 입력해주세요.")),
                 );
                 return;
               }
-
-              await viewModel.writePost(title, content);
+              await viewModel.writePost();
               Navigator.pop(context);
             },
             child: Text("저장", style: AppFont.bold(16, color: AppColor.main)),
@@ -69,7 +51,7 @@ class _WriteEditScreenState extends State<WriteEditScreen> {
         child: Column(
           children: [
             TextField(
-              controller: _titleController,
+              controller: viewModel.titleController,
               style: AppFont.bold(16),
               decoration: InputDecoration(
                 hintText: "제목을 입력하세요",
@@ -79,7 +61,7 @@ class _WriteEditScreenState extends State<WriteEditScreen> {
             Divider(),
             Expanded(
               child: TextField(
-                controller: _contentController,
+                controller: viewModel.contentController,
                 maxLines: null,
                 expands: true,
                 style: AppFont.regular(15),

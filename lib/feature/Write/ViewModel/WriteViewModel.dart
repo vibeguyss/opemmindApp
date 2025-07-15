@@ -2,9 +2,14 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:openmind_app/feature/Write/Model/MyWriteModel.dart';
+import 'package:openmind_app/shared/Api/ApiClient.dart';
 
 class WriteViewModel extends ChangeNotifier {
+  final titleController = TextEditingController();
+  final contentController = TextEditingController();
+
   List<MyWriteModel> _myWritings = [];
+  final ApiClient apiClient = ApiClient();
   bool isLoading = false;
 
   List<MyWriteModel> get myWritings => _myWritings;
@@ -14,55 +19,74 @@ class WriteViewModel extends ChangeNotifier {
     notifyListeners();
 
     try {
-      final response = await http.get(Uri.parse('https://your.api/my-diary'));
+      final response = await apiClient.get(
+        '/daily',
+        withToken: true,
+      );
 
       if (response.statusCode == 200) {
-        final List jsonList = jsonDecode(response.body);
-        _myWritings = jsonList
-            .map((json) => MyWriteModel.fromJson(json))
-            .toList();
+        final jsonMap = jsonDecode(response.body);
+        final data = jsonMap['data'];
+
+        if (data is List) {
+          _myWritings = data.map((e) => MyWriteModel.fromJson(e)).toList();
+          print("✅ 일기 불러오기 성공: ${_myWritings.length}개");
+        } else {
+          print("❗️data가 배열이 아님: $data");
+        }
       } else {
-        print("❌ Failed to load diary list: ${response.statusCode}");
-        // 실패 시 더미 데이터 넣기
-        _setDummyData();
+        print("❌ 서버 응답 실패: ${response.statusCode}");
       }
     } catch (e) {
-      print("❌ 네트워크 오류 발생: $e");
-      // 예외 시 더미 데이터 넣기
-      _setDummyData();
+      print("❌ 네트워크 오류: $e");
     }
 
     isLoading = false;
     notifyListeners();
   }
 
-  void _setDummyData() {
-    _myWritings = [
-      MyWriteModel(dailyId: 1, title: "첫 번째 일기", content: "오늘은 정말 좋은 날이었다."),
-      MyWriteModel(dailyId: 2, title: "두 번째 일기", content: "Flutter 공부를 시작했다."),
-      MyWriteModel(dailyId: 3, title: "세 번째 일기", content: "친구들과 즐거운 시간을 보냈다."),
-    ];
+
+  Future<void> writePost() async {
+    final title = titleController.text.trim();
+    final content = contentController.text.trim();
+
+    if (title.isEmpty || content.isEmpty) return;
+
+    isLoading = true;
+    notifyListeners();
+
+    try {
+      final response = await apiClient.post(
+        '/daily',
+        body: {"title": title, "content": content},
+        withToken: true,
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        final jsonMap = jsonDecode(response.body);
+
+        if (jsonMap['status'] == 200 && jsonMap['data'] != null) {
+          final userJson = jsonMap['data'];
+          final model = MyWriteModel.fromJson(userJson);
+          print("✅ 저장 성공: ${model.dailyId}");
+        } else {
+          print("❌ 응답 구조 오류 또는 status != 200: $jsonMap");
+        }
+      } else {
+        print("❌ HTTP 오류: ${response.statusCode}");
+      }
+    } catch (e) {
+      print("❌ 저장 중 오류: $e");
+    }
+
+    isLoading = false;
+    notifyListeners();
   }
 
-  Future<MyWriteModel?> writePost(String title, String content) async {
-    final response = await http.post(
-      Uri.parse('https://your.api/diary'),
-      headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({
-        'title': title,
-        'content': content,
-      }),
-    );
-
-    if (response.statusCode == 201) {
-      final json = jsonDecode(response.body);
-      final newDiary = MyWriteModel.fromJson(json);
-      _myWritings.insert(0, newDiary);
-      notifyListeners();
-      return newDiary;
-    } else {
-      print("❌ Failed to post diary: ${response.statusCode}");
-      return null;
-    }
+  @override
+  void dispose() {
+    titleController.dispose();
+    contentController.dispose();
+    super.dispose();
   }
 }
