@@ -31,7 +31,7 @@ class TabItem extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               icon.toIcon(
-                color: isSelected ? AppColor.text(context) : AppColor.disable,
+                color: isSelected ? Colors.black : AppColor.disable,
                 width: 28,
                 height: 25,
               ),
@@ -40,7 +40,7 @@ class TabItem extends StatelessWidget {
                 description,
                 style: AppFont.regular(
                   10,
-                  color: isSelected ? AppColor.text(context) : AppColor.disable,
+                  color: isSelected ? Colors.black : AppColor.disable,
                 ),
               ),
             ],

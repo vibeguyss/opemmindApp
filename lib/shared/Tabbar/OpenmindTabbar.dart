@@ -70,7 +70,7 @@ class _OpenmindTabbarState extends State<OpenmindTabbar>
     return Container(
       height: 100,
       decoration: BoxDecoration(
-        color: AppColor.bg(context),
+        color: Colors.white,
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.1),
@@ -84,7 +84,7 @@ class _OpenmindTabbarState extends State<OpenmindTabbar>
         children: [
           Container(
             height: 60,
-            margin: EdgeInsets.only(top: 20),
+            margin: EdgeInsets.only(top: 10),
             child: Row(
               children: [
                 TabItem(

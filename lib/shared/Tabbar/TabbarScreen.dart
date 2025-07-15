@@ -27,7 +27,7 @@ class _TabbarScreenState extends State<TabbarScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColor.bg(context),
+      backgroundColor: Colors.white,
       body: _pages[_currentIndex],
       bottomNavigationBar: OpenmindTabbar(
         currentIndex: _currentIndex,
