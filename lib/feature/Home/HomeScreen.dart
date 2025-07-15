@@ -64,7 +64,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
           SliverToBoxAdapter(
             child: Padding(
-              padding: const EdgeInsets.all(20),
+              padding: EdgeInsets.all(20),
               child: SizedBox(
                 height: 40,
                 child: SearchTextField(
@@ -87,7 +87,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   headerText: "새로운 마음을 찾아요",
                   title: "AI랑 상담하러 가기",
                   headerIcon: Icons.psychology_outlined,
-                  headerIconColor: Color(0xFF81D4FA),
+                  headerIconColor: Colors.black,
                   cardColor: Colors.white,
                   titleTextColor: Colors.black,
                   headerTextColor: Colors.black54,
@@ -123,7 +123,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   headerText: "나에게 맞는 상담사를 찾아요",
                   title: "상담사 매칭 하러 가기",
                   headerIcon: Icons.people_alt_outlined,
-                  headerIconColor: Color(0xFFAED581),
+                  headerIconColor: Colors.black,
                   cardColor: Colors.white,
                   titleTextColor: Colors.black,
                   headerTextColor: Colors.black54,
@@ -135,7 +135,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const MessageScreen(),
+                        builder: (context) => MessageScreen(),
                       ),
                     );
                   },
@@ -148,7 +148,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => const MessageScreen(),
+                            builder: (context) => MessageScreen(),
                           ),
                         );
                       },
@@ -163,7 +163,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => const MessageScreen(),
+                            builder: (context) => MessageScreen(),
                           ),
                         );
                       },
@@ -178,7 +178,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   headerText: "오늘 하루를 기록해요",
                   title: "일기 쓰러 가기",
                   headerIcon: Icons.book_outlined,
-                  headerIconColor: Color(0xFFFFCC80),
+                  headerIconColor: Colors.black,
                   cardColor: Colors.white,
                   titleTextColor: Colors.black,
                   headerTextColor: Colors.black54,
