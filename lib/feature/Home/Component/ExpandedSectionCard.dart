@@ -67,7 +67,7 @@ class ExpandedSectionCard extends StatelessWidget {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10.0),
                     ),
-                    padding: EdgeInsets.symmetric(vertical: 15.0),
+                    padding: EdgeInsets.symmetric(vertical: 10.0),
                   ),
                   child: Text(
                     buttonText,

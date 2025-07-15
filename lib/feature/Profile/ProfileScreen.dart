@@ -100,7 +100,7 @@ class ProfileScreen extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(title, style: TextStyle(fontSize: 16, color: Colors.black)),
+            Text(title, style: AppFont.medium(16)),
             Row(
               children: [
                 if (trailingText != null)

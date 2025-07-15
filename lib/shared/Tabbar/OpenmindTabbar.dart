@@ -62,8 +62,8 @@ class _OpenmindTabbarState extends State<OpenmindTabbar>
   Widget build(BuildContext context) {
     final tabItems = [
       (icon: AppIcon.home, label: "홈"),
-      (icon: AppIcon.write, label: "일기"),
       (icon: AppIcon.search, label: "둘러보기"),
+      (icon: AppIcon.write, label: "일기"),
       (icon: AppIcon.profile, label: "프로필"),
     ];
 
@@ -94,17 +94,17 @@ class _OpenmindTabbarState extends State<OpenmindTabbar>
                   description: tabItems[0].label,
                 ),
                 TabItem(
-                  icon: tabItems[2].icon,
-                  isSelected: widget.currentIndex == 2,
-                  onTap: () => widget.onTap(2),
-                  description: tabItems[2].label,
-                ),
-                Expanded(child: SizedBox()),
-                TabItem(
                   icon: tabItems[1].icon,
                   isSelected: widget.currentIndex == 1,
                   onTap: () => widget.onTap(1),
                   description: tabItems[1].label,
+                ),
+                Expanded(child: SizedBox()),
+                TabItem(
+                  icon: tabItems[2].icon,
+                  isSelected: widget.currentIndex == 2,
+                  onTap: () => widget.onTap(2),
+                  description: tabItems[2].label,
                 ),
                 TabItem(
                   icon: tabItems[3].icon,

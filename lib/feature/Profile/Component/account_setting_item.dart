@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:openmind_app/shared/FontExt.dart';
 
 class AccountSettingItem extends StatelessWidget {
   final String title;
@@ -23,15 +24,8 @@ class AccountSettingItem extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(
-              title,
-              style: TextStyle(
-                fontSize: 16,
-                color: textColor,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-            const Icon(Icons.arrow_forward_ios, color: Colors.grey, size: 18),
+            Text(title, style: (AppFont.medium(16, color: textColor))),
+            Icon(Icons.arrow_forward_ios, color: Colors.grey, size: 18),
           ],
         ),
       ),
