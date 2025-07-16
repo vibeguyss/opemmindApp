@@ -1,8 +1,9 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
+import 'package:http/http.dart' as http; // Keep if still needed elsewhere, otherwise can remove
 import 'package:openmind_app/feature/Write/Model/MyWriteModel.dart';
 import 'package:openmind_app/shared/Api/ApiClient.dart';
+import 'package:openmind_app/shared/Api/BaseResponse.dart'; // Import BaseResponse
 
 class WriteViewModel extends ChangeNotifier {
   final titleController = TextEditingController();
@@ -24,33 +25,48 @@ class WriteViewModel extends ChangeNotifier {
         withToken: true,
       );
 
-      if (response.statusCode == 200) {
-        final jsonMap = jsonDecode(response.body);
-        final data = jsonMap['data'];
+      // Decode the response body using UTF-8
+      final decodedBody = utf8.decode(response.bodyBytes);
 
-        if (data is List) {
-          _myWritings = data.map((e) => MyWriteModel.fromJson(e)).toList();
+      if (response.statusCode == 200) {
+        final baseResponse = BaseResponse<List<dynamic>>.fromJson(
+          jsonDecode(decodedBody),
+              (json) => json as List<dynamic>,
+        );
+
+        if (baseResponse.data != null) {
+          _myWritings = baseResponse.data!
+              .map((e) => MyWriteModel.fromJson(e as Map<String, dynamic>))
+              .toList();
           print("✅ 일기 불러오기 성공: ${_myWritings.length}개");
         } else {
-          print("❗️data가 배열이 아님: $data");
+          _myWritings = []; // No data returned
         }
       } else {
-        print("❌ 서버 응답 실패: ${response.statusCode}");
+        // Handle API errors based on status code
+        final errorResponse = BaseResponse<String>.fromJson(
+          jsonDecode(decodedBody),
+              (json) => json.toString(), // Assuming error message is a string
+        );
+        _myWritings = []; // Clear writings on error
       }
     } catch (e) {
-      print("❌ 네트워크 오류: $e");
+      _myWritings = []; // Clear writings on error
+    } finally {
+      isLoading = false;
+      notifyListeners();
     }
-
-    isLoading = false;
-    notifyListeners();
   }
 
 
-  Future<void> writePost() async {
+  Future<bool> writePost() async { // Changed return type to bool for success/failure
     final title = titleController.text.trim();
     final content = contentController.text.trim();
 
-    if (title.isEmpty || content.isEmpty) return;
+    if (title.isEmpty || content.isEmpty) {
+      notifyListeners();
+      return false;
+    }
 
     isLoading = true;
     notifyListeners();
@@ -62,25 +78,40 @@ class WriteViewModel extends ChangeNotifier {
         withToken: true,
       );
 
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        final jsonMap = jsonDecode(response.body);
+      // Decode the response body using UTF-8
+      final decodedBody = utf8.decode(response.bodyBytes);
 
-        if (jsonMap['status'] == 200 && jsonMap['data'] != null) {
-          final userJson = jsonMap['data'];
-          final model = MyWriteModel.fromJson(userJson);
-          print("✅ 저장 성공: ${model.dailyId}");
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        final baseResponse = BaseResponse<Map<String, dynamic>>.fromJson(
+          jsonDecode(decodedBody),
+              (json) => json as Map<String, dynamic>, // Assuming data is a single object for a new post
+        );
+
+        if (baseResponse.data != null) {
+          final model = MyWriteModel.fromJson(baseResponse.data!);
+          print("✅ 일기 저장 성공: ${model.dailyId}");
+          // Optionally, add the new post to _myWritings if you want to update the list immediately
+          // _myWritings.insert(0, model); // Add to the beginning
+          // notifyListeners();
+          return true; // Indicate success
         } else {
-          print("❌ 응답 구조 오류 또는 status != 200: $jsonMap");
+          print("❌ 응답 데이터 오류: $decodedBody");
+          return false;
         }
       } else {
+        final errorResponse = BaseResponse<String>.fromJson(
+          jsonDecode(decodedBody),
+              (json) => json.toString(),
+        );
         print("❌ HTTP 오류: ${response.statusCode}");
+        return false;
       }
     } catch (e) {
-      print("❌ 저장 중 오류: $e");
+      return false;
+    } finally {
+      isLoading = false;
+      notifyListeners();
     }
-
-    isLoading = false;
-    notifyListeners();
   }
 
   @override

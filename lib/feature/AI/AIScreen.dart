@@ -25,8 +25,7 @@ class _AIScreenState extends State<AIScreen> with SingleTickerProviderStateMixin
     _rainbowController = AnimationController(
       vsync: this,
       duration: const Duration(seconds: 8),
-    )
-      ..repeat();
+    )..repeat();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final vm = context.read<AiViewModel>();
@@ -56,6 +55,11 @@ class _AIScreenState extends State<AIScreen> with SingleTickerProviderStateMixin
     final vm = context.read<AiViewModel>();
     final text = _textController.text.trim();
     if (text.isEmpty) return;
+
+    if (vm.isLoading) {
+      print("AI가 이미 응답 중입니다. 잠시 기다려 주세요.");
+      return;
+    }
 
     vm.sendMessage(text);
     _textController.clear();
@@ -91,7 +95,7 @@ class _AIScreenState extends State<AIScreen> with SingleTickerProviderStateMixin
         elevation: 0,
         title: Text("AI와 상담하기", style: AppFont.bold(18)),
         centerTitle: true,
-        iconTheme: IconThemeData(color: Colors.black),
+        iconTheme: const IconThemeData(color: Colors.black),
       ),
       body: SafeArea(
         child: Column(
@@ -99,25 +103,54 @@ class _AIScreenState extends State<AIScreen> with SingleTickerProviderStateMixin
             Expanded(
               child: ListView.builder(
                 controller: _scrollController,
-                padding: const EdgeInsets.symmetric(
-                    vertical: 16, horizontal: 12),
-                itemCount: vm.messages.length,
+                padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 12),
+                itemCount: vm.messages.length + (vm.isLoading ? 1 : 0),
                 itemBuilder: (context, index) {
+                  // 로딩 메시지는 목록의 마지막 항목으로 표시합니다.
+                  if (vm.isLoading && index == vm.messages.length) {
+                    return Align(
+                      alignment: Alignment.centerLeft,
+                      child: Container(
+                        constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.6),
+                        margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+                        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 14),
+                        decoration: messageBubbleDecoration(false), // AI 버블 스타일 적용
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const SizedBox(
+                              width: 16,
+                              height: 16,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                                valueColor: AlwaysStoppedAnimation<Color>(Colors.black54),
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            Text(
+                              "AI가 채팅 보내는 중...",
+                              style: TextStyle(
+                                color: Colors.black87,
+                                fontSize: 15,
+                                height: 1.35,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  }
+
+                  // 일반 메시지 표시
                   final msg = vm.messages[index];
                   final isUser = msg.isUser;
 
                   return Align(
-                    alignment: isUser ? Alignment.centerRight : Alignment
-                        .centerLeft,
+                    alignment: isUser ? Alignment.centerRight : Alignment.centerLeft,
                     child: Container(
-                      constraints: BoxConstraints(maxWidth: MediaQuery
-                          .of(context)
-                          .size
-                          .width * 0.75),
-                      margin: const EdgeInsets.symmetric(
-                          vertical: 4, horizontal: 8),
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 10, horizontal: 14),
+                      constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.75),
+                      margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+                      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 14),
                       decoration: messageBubbleDecoration(isUser),
                       child: Text(
                         msg.text,
@@ -137,14 +170,10 @@ class _AIScreenState extends State<AIScreen> with SingleTickerProviderStateMixin
             AnimatedPadding(
               duration: const Duration(milliseconds: 300),
               curve: Curves.easeOut,
-              padding: EdgeInsets.only(bottom: MediaQuery
-                  .of(context)
-                  .viewInsets
-                  .bottom),
+              padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
               child: Container(
                 color: AppColor.background,
-                padding: const EdgeInsets.symmetric(
-                    horizontal: 16, vertical: 10),
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
@@ -153,12 +182,14 @@ class _AIScreenState extends State<AIScreen> with SingleTickerProviderStateMixin
                         controller: _textController,
                         animation: _rainbowController,
                         onSubmitted: (_) => _sendMessage(),
+                        enabled: !vm.isLoading,
                       ),
                     ),
                     const SizedBox(width: 10),
                     SendButton(
                       onPressed: _sendMessage,
                       color: AppColor.userBubbleBg,
+                      isDisabled: vm.isLoading,
                     ),
                   ],
                 ),

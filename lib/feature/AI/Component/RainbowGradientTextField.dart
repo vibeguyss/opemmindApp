@@ -10,7 +10,7 @@ class RainbowGradientTextField extends StatelessWidget {
     Key? key,
     required this.controller,
     required this.animation,
-    this.onSubmitted,
+    this.onSubmitted, required bool enabled,
   }) : super(key: key);
 
   @override

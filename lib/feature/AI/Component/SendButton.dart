@@ -7,7 +7,7 @@ class SendButton extends StatelessWidget {
   const SendButton({
     Key? key,
     required this.onPressed,
-    required this.color,
+    required this.color, required bool isDisabled,
   }) : super(key: key);
 
   @override

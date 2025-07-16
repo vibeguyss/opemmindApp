@@ -56,7 +56,9 @@ class DoctorInfoSheet extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (_) => MessageScreen(),
+                    builder: (_) => MessageScreen(
+                      counselorName: doctor.name,
+                    ),
                   ),
                 );
               },

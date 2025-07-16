@@ -40,7 +40,13 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     final cardRadius = 14.0;
     final buttonHeight = 44.0;
-    final mainColor = AppColor.main;
+    final mainColor = AppColor.main; // This is your primary blue color
+
+    // Define a slightly lighter/softer blue based on mainColor for icons/elements that need a subtle variation
+    final softBlue = mainColor.withOpacity(
+      0.6,
+    ); // Or Colors.lightBlue.shade400; if you prefer a specific shade
+    final mutedTextColor = Colors.black54; // Consistent muted text color
 
     return Scaffold(
       backgroundColor: AppColor.background,
@@ -56,10 +62,10 @@ class _HomeScreenState extends State<HomeScreen> {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (_) => MessageScreen()),
+                    MaterialPageRoute(builder: (_) => const ArroundScreen()),
                   );
                 },
-                icon: Icon(Icons.send, color: Colors.black87),
+                icon: const Icon(Icons.send, color: Colors.black87),
                 splashRadius: 20,
               ),
             ],
@@ -140,9 +146,9 @@ class _HomeScreenState extends State<HomeScreen> {
                         const SizedBox(height: 6),
                         Text(
                           "마음의 무게를 가볍게, AI가 함께 합니다.",
-                          style: AppFont.regular(
-                            14,
-                          ).copyWith(color: Colors.black54),
+                          style: AppFont.regular(14).copyWith(
+                            color: mutedTextColor,
+                          ), // Unified muted text color
                         ),
                         const SizedBox(height: 20),
                         SizedBox(
@@ -152,7 +158,9 @@ class _HomeScreenState extends State<HomeScreen> {
                             onPressed: () {
                               Navigator.push(
                                 context,
-                                MaterialPageRoute(builder: (_) => AIScreen()),
+                                MaterialPageRoute(
+                                  builder: (_) => const AIScreen(),
+                                ),
                               );
                             },
                             style: ElevatedButton.styleFrom(
@@ -176,7 +184,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
 
-              // 상담사 매칭 카드
+              // Unified 상담사 매칭 카드
               Padding(
                 padding: const EdgeInsets.symmetric(
                   horizontal: 20,
@@ -186,17 +194,20 @@ class _HomeScreenState extends State<HomeScreen> {
                   headerText: "나에게 맞는 상담사를 찾아요",
                   title: "상담사 매칭 진행 중이에요",
                   headerIcon: Icons.people_alt_outlined,
-                  headerIconColor: Colors.black87,
+                  headerIconColor: mainColor,
+                  // Unified icon color to mainColor
                   cardColor: Colors.white,
-                  titleTextColor: Colors.black87,
-                  headerTextColor: Colors.black54,
+                  titleTextColor: mainColor,
+                  // Unified title color to mainColor
+                  headerTextColor: mutedTextColor,
+                  // Unified muted text color
                   buttonText: "상담사 매칭하러 가기",
                   buttonColor: mainColor,
                   buttonTextColor: Colors.white,
                   onButtonPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (_) => ArroundScreen()),
+                      MaterialPageRoute(builder: (_) => const ArroundScreen()),
                     );
                   },
                   additionalActions: [
@@ -207,15 +218,15 @@ class _HomeScreenState extends State<HomeScreen> {
                         children: [
                           Text(
                             "87%의 사용자들이 연결되었어요",
-                            style: AppFont.medium(
-                              13,
-                            ).copyWith(color: Colors.black54),
+                            style: AppFont.medium(13).copyWith(
+                              color: mutedTextColor,
+                            ), // Unified muted text color
                           ),
                           Text(
                             "87%",
-                            style: AppFont.bold(
-                              13,
-                            ).copyWith(color: Colors.black87),
+                            style: AppFont.bold(13).copyWith(
+                              color: mainColor,
+                            ), // Percentage can use mainColor
                           ),
                         ],
                       ),
@@ -237,10 +248,13 @@ class _HomeScreenState extends State<HomeScreen> {
                       onTap: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (_) => ArroundScreen()),
+                          MaterialPageRoute(
+                            builder: (_) => const ArroundScreen(),
+                          ),
                         );
                       },
-                      textColor: Colors.black87,
+                      textColor:
+                          mainColor, // Unified action text color to mainColor
                     ),
                     const Divider(color: Colors.black12, height: 20),
                     ActionRow(
@@ -249,16 +263,19 @@ class _HomeScreenState extends State<HomeScreen> {
                       onTap: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (_) => MessageScreen()),
+                          MaterialPageRoute(
+                            builder: (_) => const ArroundScreen(),
+                          ),
                         );
                       },
-                      textColor: Colors.black87,
+                      textColor:
+                          mainColor, // Unified action text color to mainColor
                     ),
                   ],
                 ),
               ),
 
-              // 일기 작성 카드
+              // Unified 일기 작성 카드
               Padding(
                 padding: const EdgeInsets.symmetric(
                   horizontal: 20,
@@ -268,17 +285,20 @@ class _HomeScreenState extends State<HomeScreen> {
                   headerText: "오늘 하루를 기록해요",
                   title: "일기 쓰러 가기",
                   headerIcon: Icons.book_outlined,
-                  headerIconColor: Colors.black87,
+                  headerIconColor: mainColor,
+                  // Unified icon color to mainColor
                   cardColor: Colors.white,
-                  titleTextColor: Colors.black87,
-                  headerTextColor: Colors.black54,
+                  titleTextColor: mainColor,
+                  // Unified title color to mainColor
+                  headerTextColor: mutedTextColor,
+                  // Unified muted text color
                   buttonText: "새 일기 작성하기",
                   buttonColor: mainColor,
                   buttonTextColor: Colors.white,
                   onButtonPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (_) => WriteScreen()),
+                      MaterialPageRoute(builder: (_) => const WriteScreen()),
                     );
                   },
                   additionalActions: [
@@ -288,10 +308,13 @@ class _HomeScreenState extends State<HomeScreen> {
                       onTap: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (_) => WriteScreen()),
+                          MaterialPageRoute(
+                            builder: (_) => const WriteScreen(),
+                          ),
                         );
                       },
-                      textColor: Colors.black87,
+                      textColor:
+                          mainColor, // Unified action text color to mainColor
                     ),
                   ],
                 ),
