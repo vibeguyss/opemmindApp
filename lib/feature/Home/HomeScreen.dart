@@ -4,7 +4,7 @@ import 'package:openmind_app/feature/AI/AIScreen.dart';
 import 'package:openmind_app/feature/Arround/ArroundScreen.dart';
 import 'package:openmind_app/feature/Component/SearchTextField.dart';
 import 'package:openmind_app/feature/Home/Component/ExpandedSectionCard.dart';
-import 'package:openmind_app/feature/Message/MessageScreen.dart';
+import 'package:openmind_app/feature/Message/MessageScreen.dart'; // MessageScreen 임포트 확인
 import 'package:openmind_app/feature/Write/WriteScreen.dart';
 import 'package:openmind_app/shared/ColorExt.dart';
 import 'package:openmind_app/shared/FontExt.dart';
@@ -40,13 +40,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     final cardRadius = 14.0;
     final buttonHeight = 44.0;
-    final mainColor = AppColor.main; // This is your primary blue color
-
-    // Define a slightly lighter/softer blue based on mainColor for icons/elements that need a subtle variation
-    final softBlue = mainColor.withOpacity(
-      0.6,
-    ); // Or Colors.lightBlue.shade400; if you prefer a specific shade
-    final mutedTextColor = Colors.black54; // Consistent muted text color
+    final mainColor = AppColor.main;
 
     return Scaffold(
       backgroundColor: AppColor.background,
@@ -62,10 +56,10 @@ class _HomeScreenState extends State<HomeScreen> {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (_) => const ArroundScreen()),
+                    MaterialPageRoute(builder: (_) => ArroundScreen()),
                   );
                 },
-                icon: const Icon(Icons.send, color: Colors.black87),
+                icon: Icon(Icons.send, color: Colors.black87),
                 splashRadius: 20,
               ),
             ],
@@ -146,9 +140,9 @@ class _HomeScreenState extends State<HomeScreen> {
                         const SizedBox(height: 6),
                         Text(
                           "마음의 무게를 가볍게, AI가 함께 합니다.",
-                          style: AppFont.regular(14).copyWith(
-                            color: mutedTextColor,
-                          ), // Unified muted text color
+                          style: AppFont.regular(
+                            14,
+                          ).copyWith(color: Colors.black54),
                         ),
                         const SizedBox(height: 20),
                         SizedBox(
@@ -158,9 +152,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             onPressed: () {
                               Navigator.push(
                                 context,
-                                MaterialPageRoute(
-                                  builder: (_) => const AIScreen(),
-                                ),
+                                MaterialPageRoute(builder: (_) => AIScreen()),
                               );
                             },
                             style: ElevatedButton.styleFrom(
@@ -184,7 +176,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
 
-              // Unified 상담사 매칭 카드
+              // 상담사 매칭 카드
               Padding(
                 padding: const EdgeInsets.symmetric(
                   horizontal: 20,
@@ -194,20 +186,17 @@ class _HomeScreenState extends State<HomeScreen> {
                   headerText: "나에게 맞는 상담사를 찾아요",
                   title: "상담사 매칭 진행 중이에요",
                   headerIcon: Icons.people_alt_outlined,
-                  headerIconColor: mainColor,
-                  // Unified icon color to mainColor
+                  headerIconColor: Colors.black87,
                   cardColor: Colors.white,
-                  titleTextColor: mainColor,
-                  // Unified title color to mainColor
-                  headerTextColor: mutedTextColor,
-                  // Unified muted text color
+                  titleTextColor: Colors.black87,
+                  headerTextColor: Colors.black54,
                   buttonText: "상담사 매칭하러 가기",
                   buttonColor: mainColor,
                   buttonTextColor: Colors.white,
                   onButtonPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (_) => const ArroundScreen()),
+                      MaterialPageRoute(builder: (_) => ArroundScreen()),
                     );
                   },
                   additionalActions: [
@@ -218,15 +207,15 @@ class _HomeScreenState extends State<HomeScreen> {
                         children: [
                           Text(
                             "87%의 사용자들이 연결되었어요",
-                            style: AppFont.medium(13).copyWith(
-                              color: mutedTextColor,
-                            ), // Unified muted text color
+                            style: AppFont.medium(
+                              13,
+                            ).copyWith(color: Colors.black54),
                           ),
                           Text(
                             "87%",
-                            style: AppFont.bold(13).copyWith(
-                              color: mainColor,
-                            ), // Percentage can use mainColor
+                            style: AppFont.bold(
+                              13,
+                            ).copyWith(color: Colors.black87),
                           ),
                         ],
                       ),
@@ -248,34 +237,30 @@ class _HomeScreenState extends State<HomeScreen> {
                       onTap: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(
-                            builder: (_) => const ArroundScreen(),
-                          ),
+                          MaterialPageRoute(builder: (_) => ArroundScreen()),
                         );
                       },
-                      textColor:
-                          mainColor, // Unified action text color to mainColor
+                      textColor: Colors.black87,
                     ),
                     const Divider(color: Colors.black12, height: 20),
                     ActionRow(
                       mainText: "상담사 예약 확인",
                       actionText: "예약 내역 보기",
                       onTap: () {
+                        // --- 이 부분이 수정되어야 합니다 ---
                         Navigator.push(
                           context,
-                          MaterialPageRoute(
-                            builder: (_) => const ArroundScreen(),
-                          ),
+                          MaterialPageRoute(builder: (_) => ArroundScreen()),
                         );
+                        // --- 수정 끝 ---
                       },
-                      textColor:
-                          mainColor, // Unified action text color to mainColor
+                      textColor: Colors.black87,
                     ),
                   ],
                 ),
               ),
 
-              // Unified 일기 작성 카드
+              // 일기 작성 카드
               Padding(
                 padding: const EdgeInsets.symmetric(
                   horizontal: 20,
@@ -285,20 +270,17 @@ class _HomeScreenState extends State<HomeScreen> {
                   headerText: "오늘 하루를 기록해요",
                   title: "일기 쓰러 가기",
                   headerIcon: Icons.book_outlined,
-                  headerIconColor: mainColor,
-                  // Unified icon color to mainColor
+                  headerIconColor: Colors.black87,
                   cardColor: Colors.white,
-                  titleTextColor: mainColor,
-                  // Unified title color to mainColor
-                  headerTextColor: mutedTextColor,
-                  // Unified muted text color
+                  titleTextColor: Colors.black87,
+                  headerTextColor: Colors.black54,
                   buttonText: "새 일기 작성하기",
                   buttonColor: mainColor,
                   buttonTextColor: Colors.white,
                   onButtonPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (_) => const WriteScreen()),
+                      MaterialPageRoute(builder: (_) => WriteScreen()),
                     );
                   },
                   additionalActions: [
@@ -308,13 +290,10 @@ class _HomeScreenState extends State<HomeScreen> {
                       onTap: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(
-                            builder: (_) => const WriteScreen(),
-                          ),
+                          MaterialPageRoute(builder: (_) => WriteScreen()),
                         );
                       },
-                      textColor:
-                          mainColor, // Unified action text color to mainColor
+                      textColor: Colors.black87,
                     ),
                   ],
                 ),
